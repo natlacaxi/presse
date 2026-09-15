@@ -65,6 +65,11 @@ h1,h2,h3,.brand,.tabbar button{font-family:'Manrope',sans-serif;}
 }
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em;}
 .brand .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:0 0 14px rgba(191,90,242,.8);}
+.clock{
+  font-family:'Manrope',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.03em;
+  color:var(--ink);background:rgba(255,255,255,.05);border:1px solid var(--glass-brd);
+  padding:6px 14px;border-radius:999px;font-variant-numeric:tabular-nums;
+}
 .status-pill{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-dim);}
 .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -120,29 +125,65 @@ h1,h2,h3,.brand,.tabbar button{font-family:'Manrope',sans-serif;}
 .edge-orange{ --edge-c: rgba(255,171,61,.32); animation: edgeGlow 6s ease-in-out infinite; }
 
 /* ===================== PROJET (bloc-notes) ===================== */
-.projet-layout{display:grid;grid-template-columns:250px 1fr;gap:18px;align-items:start;}
-@media (max-width:820px){.projet-layout{grid-template-columns:1fr;}}
-.notes-sidebar{padding:16px;position:sticky;top:88px;}
-.notes-sidebar h3{margin:2px 4px 12px;font-size:13px;letter-spacing:.02em;color:var(--ink-dim);font-weight:700;text-transform:none;}
+.projet-layout{display:flex;flex-direction:column;gap:14px;}
+.notes-tabbar-h{
+  display:flex;flex-direction:column;gap:8px;padding:12px 14px;flex:none;
+}
+.notes-tabbar-head{display:flex;align-items:center;justify-content:space-between;}
+.notes-tabbar-head h3{margin:0;font-size:12.5px;letter-spacing:.03em;color:var(--ink-dim);font-weight:700;}
+.note-tabs-row{
+  display:flex;flex-direction:column;gap:4px;
+  max-height:190px;overflow-y:auto;overflow-x:hidden;
+  padding-right:4px;
+}
+.add-note-btn-h{
+  flex:none;width:30px;height:30px;border-radius:50%;border:1.5px dashed var(--glass-brd);
+  background:transparent;color:var(--ink-dim);font-weight:800;font-size:16px;cursor:pointer;transition:.2s;
+  line-height:1;
+}
+.add-note-btn-h:hover{border-color:var(--blue);color:#fff;background:rgba(58,160,255,.12);border-style:solid;}
 .note-item{
-  display:flex;align-items:center;gap:10px;
-  padding:11px 12px;border-radius:14px;margin-bottom:6px;cursor:pointer;
+  display:flex;align-items:center;gap:10px;flex:none;width:100%;
+  padding:9px 10px;border-radius:12px;cursor:pointer;
   border:1px solid transparent;
   transition:background .2s, transform .15s;
-  font-size:14.5px;font-weight:600;
+  font-size:14px;font-weight:600;
 }
 .note-item:hover{background:rgba(255,255,255,.06);}
 .note-item.active{background:rgba(255,255,255,.1);border-color:var(--glass-brd);}
-.note-color{width:10px;height:10px;border-radius:50%;flex:none;box-shadow:0 0 6px currentColor;}
-.note-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.note-del{opacity:0;font-size:13px;color:var(--ink-dim);transition:opacity .2s;}
+.note-color{width:9px;height:9px;border-radius:50%;flex:none;box-shadow:0 0 6px currentColor;}
+.note-name{flex:1;max-width:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.note-del{opacity:.55;font-size:12px;color:var(--ink-dim);transition:opacity .2s, color .2s;}
 .note-item:hover .note-del{opacity:1;}
-.note-del:hover{color:var(--pink);}
-.note-move{display:flex;flex-direction:column;opacity:0;transition:opacity .2s;line-height:.7;margin-right:2px;}
+.note-del:hover{color:var(--pink);opacity:1;}
+.note-move{display:flex;flex-direction:column;opacity:.55;transition:opacity .2s;line-height:.7;gap:1px;}
 .note-item:hover .note-move{opacity:1;}
-.note-move .mv{font-size:11px;color:var(--ink-dim);cursor:pointer;padding:1px 2px;}
+.note-move .mv{font-size:11px;color:var(--ink-dim);cursor:pointer;padding:1px 3px;}
 .note-move .mv:hover{color:#fff;}
 .note-move .mv.disabled{opacity:.25;pointer-events:none;}
+
+/* ---------- Confirmation de suppression (annulable) ---------- */
+.undo-overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s ease;
+}
+.undo-overlay.show{opacity:1;pointer-events:auto;}
+.undo-box{
+  background:#111319;border:1px solid var(--glass-brd);border-radius:18px;
+  padding:24px 26px;width:min(340px,86vw);text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+.undo-text{font-size:14.5px;margin-bottom:16px;line-height:1.5;}
+.undo-text b{color:#fff;}
+.undo-bar{height:6px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-bottom:18px;}
+.undo-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--orange));border-radius:6px;}
+.undo-cancel{
+  border:none;border-radius:12px;padding:11px 26px;font-weight:800;font-size:14px;cursor:pointer;
+  background:var(--pink);color:#fff;transition:transform .15s, background .2s;
+}
+.undo-cancel:hover{background:#ff3966;transform:scale(1.03);}
 .add-note-btn{
   width:100%;margin-top:8px;padding:11px;border-radius:14px;border:1.5px dashed var(--glass-brd);
   background:transparent;color:var(--ink-dim);font-weight:700;cursor:pointer;font-size:13.5px;
@@ -324,6 +365,7 @@ h1,h2,h3,.brand,.tabbar button{font-family:'Manrope',sans-serif;}
 
 @media(max-width:600px){
   .topbar{padding:12px 14px;}
+  .clock{font-size:12px;padding:5px 10px;}
   .status-pill{display:none;}
   .composer-row{flex-wrap:wrap;}
   .composer-row input[type=text]{width:100%;}
@@ -347,6 +389,7 @@ h1,h2,h3,.brand,.tabbar button{font-family:'Manrope',sans-serif;}
 <div id="appShell">
 <div class="topbar">
   <div class="brand"><span class="dot"></span>Presse HGGSP</div>
+  <div class="clock" id="liveClock">--:--:--</div>
   <div class="status-pill"><span class="status-dot"></span><span id="statusText">Connecté</span></div>
 </div>
 
@@ -355,10 +398,12 @@ h1,h2,h3,.brand,.tabbar button{font-family:'Manrope',sans-serif;}
 <!-- ================= PROJET ================= -->
 <div class="page active" id="page-projet">
   <div class="projet-layout">
-    <div class="glass notes-sidebar edge-blue">
-      <h3>Mes onglets</h3>
-      <div id="noteList"></div>
-      <button class="add-note-btn" id="addNoteBtn">+ Nouvel onglet</button>
+    <div class="glass notes-tabbar-h edge-blue">
+      <div class="notes-tabbar-head">
+        <h3>Mes onglets</h3>
+        <button class="add-note-btn-h" id="addNoteBtn" title="Nouvel onglet">+</button>
+      </div>
+      <div id="noteList" class="note-tabs-row"></div>
     </div>
 
     <div class="glass editor-card edge-purple">
@@ -448,6 +493,14 @@ h1,h2,h3,.brand,.tabbar button{font-family:'Manrope',sans-serif;}
   </div>
 </div>
 
+<div class="undo-overlay" id="undoOverlay">
+  <div class="undo-box">
+    <div class="undo-text">Suppression de l'onglet <b id="undoName"></b>…</div>
+    <div class="undo-bar"><div class="undo-bar-fill" id="undoBarFill"></div></div>
+    <button class="undo-cancel" id="undoCancelBtn">Annuler</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 </div><!-- /#scrollArea -->
 
@@ -480,6 +533,14 @@ function toast(msg){
   t.textContent = msg; t.classList.add('show');
   clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2200);
 }
+
+/* ================= HORLOGE ================= */
+function updateClock(){
+  const el = document.getElementById('liveClock');
+  if(el) el.textContent = new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+updateClock();
+setInterval(updateClock, 1000);
 
 /* ================= TABS ================= */
 const tabBtns = document.querySelectorAll('.tabbar button');
@@ -625,16 +686,43 @@ async function ensureCurrentNote(){
   return await createNote();
 }
 
-async function deleteNote(id){
-  if(!confirm('Supprimer cet onglet définitivement ?')) return;
-  delete notes[id];
-  await notesCol.doc(id).delete();
-  if(currentNoteId === id){
-    const rest = Object.keys(notes);
-    if(rest.length) selectNote(rest[0]);
-    else { currentNoteId=null; document.getElementById('noteTitle').value=''; document.getElementById('noteBody').innerHTML=''; renderAttachments(); }
-  }
-  renderNoteList();
+function deleteNote(id){
+  const name = (notes[id] && notes[id].title) || 'Sans titre';
+  showUndoOverlay(name, async ()=>{
+    delete notes[id];
+    try{ await notesCol.doc(id).delete(); }catch(e){ console.error(e); toast('Suppression impossible'); }
+    if(currentNoteId === id){
+      const rest = Object.keys(notes);
+      if(rest.length) selectNote(rest[0]);
+      else { currentNoteId=null; document.getElementById('noteTitle').value=''; document.getElementById('noteBody').innerHTML=''; renderAttachments(); }
+    }
+    renderNoteList();
+  });
+}
+
+function showUndoOverlay(name, onConfirm){
+  const overlay = document.getElementById('undoOverlay');
+  const fill = document.getElementById('undoBarFill');
+  const cancelBtn = document.getElementById('undoCancelBtn');
+  document.getElementById('undoName').textContent = name;
+  overlay.classList.add('show');
+  fill.style.transition = 'none';
+  fill.style.width = '0%';
+  void fill.offsetWidth; // force reflow pour relancer l'animation
+  fill.style.transition = 'width 5s linear';
+  fill.style.width = '100%';
+
+  let done = false;
+  const finish = (cancelled)=>{
+    if(done) return; done = true;
+    clearTimeout(timer);
+    overlay.classList.remove('show');
+    cancelBtn.removeEventListener('click', onCancelClick);
+    if(!cancelled) onConfirm();
+  };
+  const onCancelClick = ()=> finish(true);
+  const timer = setTimeout(()=>finish(false), 5000);
+  cancelBtn.addEventListener('click', onCancelClick);
 }
 
 function scheduleSave(id){
@@ -710,6 +798,7 @@ document.getElementById('styleMenu').addEventListener('mousedown', e=>{
 document.querySelectorAll('.fmt-btn[data-cmd]').forEach(btn=>{
   btn.onclick = ()=>{
     restoreSelection();
+    try{ document.execCommand('styleWithCSS', false, true); }catch(e){}
     document.execCommand(btn.dataset.cmd, false, null);
     document.getElementById('noteBody').dispatchEvent(new Event('input'));
     saveSelection();
@@ -717,25 +806,31 @@ document.querySelectorAll('.fmt-btn[data-cmd]').forEach(btn=>{
 });
 document.getElementById('fontFamily').onchange = (e)=>{
   restoreSelection();
+  try{ document.execCommand('styleWithCSS', false, true); }catch(e){}
   document.execCommand('fontName', false, e.target.value);
   document.getElementById('noteBody').dispatchEvent(new Event('input'));
   saveSelection();
 };
 document.getElementById('fontSize').onchange = (e)=>{
   restoreSelection();
+  try{ document.execCommand('styleWithCSS', false, true); }catch(e){}
   document.execCommand('fontSize', false, e.target.value);
   document.getElementById('noteBody').dispatchEvent(new Event('input'));
   saveSelection();
 };
 document.getElementById('fontColor').oninput = (e)=>{
   restoreSelection();
+  try{ document.execCommand('styleWithCSS', false, true); }catch(e){}
   document.execCommand('foreColor', false, e.target.value);
   document.getElementById('noteBody').dispatchEvent(new Event('input'));
   saveSelection();
 };
 document.getElementById('bgColor').oninput = (e)=>{
   restoreSelection();
-  document.execCommand('hiliteColor', false, e.target.value);
+  try{ document.execCommand('styleWithCSS', false, true); }catch(e){}
+  let ok = false;
+  try{ ok = document.execCommand('hiliteColor', false, e.target.value); }catch(_){ ok = false; }
+  if(!ok){ try{ document.execCommand('backColor', false, e.target.value); }catch(_){} }
   document.getElementById('noteBody').dispatchEvent(new Event('input'));
   saveSelection();
 };
@@ -816,7 +911,6 @@ function escapeHtml(s){
 
 function renderForum(){
   const feed = document.getElementById('forumFeed');
-  const wasNearBottom = (feed.scrollHeight - feed.scrollTop - feed.clientHeight) < 80;
   feed.innerHTML = '';
   if(allMessages.length === 0){
     feed.innerHTML = '<div class="empty-state">Aucun message pour l\'instant. Sois le premier à écrire ! 🎉</div>';
@@ -833,7 +927,9 @@ function renderForum(){
       feed.lastChild.appendChild(wrap);
     });
   });
-  if(wasNearBottom) feed.scrollTop = feed.scrollHeight;
+  // le forum reste toujours calé tout en bas pour voir le dernier message
+  feed.scrollTop = feed.scrollHeight;
+  requestAnimationFrame(()=>{ feed.scrollTop = feed.scrollHeight; });
 }
 
 function buildMsgEl(m, isReply){
@@ -929,20 +1025,22 @@ const chatInput = document.getElementById('chatInput');
 let chatHistory = [];
 
 function addBubble(text, who){
+  const wasNearBottom = (chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight) < 100;
   const b = document.createElement('div');
   b.className = 'bubble ' + who;
   b.textContent = text;
   chatMessages.appendChild(b);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  if(wasNearBottom || who==='user') chatMessages.scrollTop = chatMessages.scrollHeight;
   return b;
 }
 function addTyping(){
+  const wasNearBottom = (chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight) < 100;
   const t = document.createElement('div');
   t.className = 'typing';
   t.id = 'typingIndicator';
   t.innerHTML = '<span></span><span></span><span></span>';
   chatMessages.appendChild(t);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  if(wasNearBottom) chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 function removeTyping(){
   const t = document.getElementById('typingIndicator');
@@ -956,11 +1054,14 @@ async function sendChat(){
   chatHistory.push({ role:'user', content:text });
   chatInput.value = ''; chatInput.style.height='auto';
   addTyping();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(()=>controller.abort(), 15000);
   try{
     const res = await fetch(AI_ENDPOINT, {
       method:'POST',
       headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ messages: chatHistory, message: text, prompt: text })
+      body: JSON.stringify({ messages: chatHistory, message: text, prompt: text }),
+      signal: controller.signal
     });
     const raw = await res.text();
     if(!res.ok){
@@ -974,18 +1075,22 @@ async function sendChat(){
         ?? (typeof data === 'string' ? data : null);
       if(reply == null) reply = JSON.stringify(data);
     }catch(_){ /* la réponse n'est pas du JSON, on garde le texte brut */ }
-    removeTyping();
+    console.log('[Assistant IA] réponse brute reçue :', raw);
+    if(!reply || /^[.…\s]*$/.test(String(reply))){
+      reply = raw && raw.trim() ? raw : "(le serveur a renvoyé une réponse vide — vérifie le code du Worker)";
+    }
     addBubble(String(reply), 'ai');
     chatHistory.push({ role:'assistant', content: String(reply) });
   }catch(err){
-    removeTyping();
     let msg = err.message;
-    if(msg === 'Failed to fetch'){
-      msg = "impossible d'atteindre le serveur (URL du Worker incorrecte, Worker arrêté, ou CORS non configuré côté Cloudflare — vérifie les en-têtes Access-Control-Allow-Origin).";
-    }
+    if(err.name === 'AbortError') msg = "le serveur n'a pas répondu à temps (délai de 15 s dépassé).";
+    else if(msg === 'Failed to fetch') msg = "impossible d'atteindre le serveur (URL du Worker incorrecte, Worker arrêté, ou CORS non configuré côté Cloudflare — vérifie les en-têtes Access-Control-Allow-Origin).";
     addBubble("Erreur en contactant l'assistant : " + msg, 'ai');
     toast('Assistant IA injoignable — voir le message ci-dessus');
     console.error(err);
+  }finally{
+    clearTimeout(timeoutId);
+    removeTyping();
   }
 }
 document.getElementById('chatSend').onclick = sendChat;
