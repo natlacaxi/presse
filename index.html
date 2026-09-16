@@ -363,6 +363,47 @@ h1,h2,h3,.brand,.tabbar button{font-family:'Manrope',sans-serif;}
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+/* ================= DIGICODE ================= */
+.lock-screen{
+  position:fixed;inset:0;z-index:1000;
+  background:#000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  padding:20px;
+  transition:opacity .4s ease, visibility .4s ease;
+}
+.lock-screen.unlocked{opacity:0;visibility:hidden;pointer-events:none;}
+.lock-dots{display:flex;gap:16px;}
+.lock-dots.shake{animation:lockShake .4s ease;}
+@keyframes lockShake{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-8px);}
+  40%{transform:translateX(8px);}
+  60%{transform:translateX(-6px);}
+  80%{transform:translateX(6px);}
+}
+.lock-dots span{
+  width:16px;height:16px;border-radius:50%;border:2px solid #fff;background:transparent;
+  transition:background .15s ease, transform .15s ease;
+}
+.lock-dots span.filled{background:#fff;transform:scale(1.1);}
+.lock-label{color:rgba(255,255,255,.55);font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;}
+.lock-error{color:var(--pink);font-size:13px;font-weight:700;height:16px;opacity:0;transition:opacity .2s;}
+.lock-error.show{opacity:1;}
+.lock-keypad{display:grid;grid-template-columns:repeat(3,64px);gap:14px;margin-top:6px;}
+.lock-keypad button{
+  width:64px;height:64px;border-radius:50%;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.05);color:#fff;font-size:22px;font-weight:600;cursor:pointer;
+  transition:background .15s, transform .1s;
+}
+.lock-keypad button:active{transform:scale(.92);background:rgba(255,255,255,.16);}
+.lock-keypad button.ghost{border:none;background:transparent;cursor:default;}
+.lock-keypad #lockBackspace{cursor:pointer;font-size:18px;color:rgba(255,255,255,.6);}
+.lock-keypad #lockBackspace:active{background:rgba(255,255,255,.1);}
+@media(max-width:420px){
+  .lock-keypad{grid-template-columns:repeat(3,58px);gap:12px;}
+  .lock-keypad button{width:58px;height:58px;font-size:20px;}
+}
+
 @media(max-width:600px){
   .topbar{padding:12px 14px;}
   .clock{font-size:12px;padding:5px 10px;}
@@ -385,6 +426,29 @@ h1,h2,h3,.brand,.tabbar button{font-family:'Manrope',sans-serif;}
 </style>
 </head>
 <body>
+
+<!-- ================= DIGICODE ================= -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-dots" id="lockDots">
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="lock-label">Code d'accès</div>
+  <div class="lock-error" id="lockError">Code incorrect</div>
+  <div class="lock-keypad">
+    <button data-k="1">1</button>
+    <button data-k="2">2</button>
+    <button data-k="3">3</button>
+    <button data-k="4">4</button>
+    <button data-k="5">5</button>
+    <button data-k="6">6</button>
+    <button data-k="7">7</button>
+    <button data-k="8">8</button>
+    <button data-k="9">9</button>
+    <button class="ghost"></button>
+    <button data-k="0">0</button>
+    <button class="ghost" id="lockBackspace">⌫</button>
+  </div>
+</div>
 
 <div id="appShell">
 <div class="topbar">
@@ -513,6 +577,61 @@ h1,h2,h3,.brand,.tabbar button{font-family:'Manrope',sans-serif;}
 </div><!-- /#appShell -->
 
 <script>
+/* ================= DIGICODE ================= */
+const LOCK_CODE = '1789';
+let lockInput = '';
+
+function updateLockDots(){
+  document.querySelectorAll('#lockDots span').forEach((dot,i)=>{
+    dot.classList.toggle('filled', i < lockInput.length);
+  });
+}
+
+function checkLockCode(){
+  if(lockInput === LOCK_CODE){
+    document.getElementById('lockScreen').classList.add('unlocked');
+    sessionStorage.setItem('presse_hggsp_unlocked', '1');
+  }else{
+    const dots = document.getElementById('lockDots');
+    const err = document.getElementById('lockError');
+    dots.classList.add('shake');
+    err.classList.add('show');
+    setTimeout(()=>{
+      dots.classList.remove('shake');
+      lockInput = '';
+      updateLockDots();
+    }, 400);
+  }
+}
+
+function lockPressDigit(d){
+  if(lockInput.length >= 4) return;
+  document.getElementById('lockError').classList.remove('show');
+  lockInput += d;
+  updateLockDots();
+  if(lockInput.length === 4) checkLockCode();
+}
+function lockBackspace(){
+  lockInput = lockInput.slice(0, -1);
+  updateLockDots();
+}
+
+document.querySelectorAll('.lock-keypad button[data-k]').forEach(btn=>{
+  btn.addEventListener('click', ()=>lockPressDigit(btn.dataset.k));
+});
+document.getElementById('lockBackspace').addEventListener('click', lockBackspace);
+
+/* Saisie possible directement au clavier de l'ordinateur */
+document.addEventListener('keydown', (e)=>{
+  if(document.getElementById('lockScreen').classList.contains('unlocked')) return;
+  if(e.key >= '0' && e.key <= '9') lockPressDigit(e.key);
+  else if(e.key === 'Backspace') lockBackspace();
+});
+
+if(sessionStorage.getItem('presse_hggsp_unlocked') === '1'){
+  document.getElementById('lockScreen').classList.add('unlocked');
+}
+
 /* ================= FIREBASE ================= */
 const firebaseConfig = {
   apiKey: "AIzaSyC4F723OeL9TtKlOJy79F8MP03IbsAfAV8",
@@ -526,7 +645,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-const AI_ENDPOINT = "https://daily.otu-claudeai.workers.dev/";
+const AI_ENDPOINT = "https://presse.oto-claudeai.workers.dev/";
 
 function toast(msg){
   const t = document.getElementById('toast');
@@ -1055,7 +1174,7 @@ async function sendChat(){
   chatInput.value = ''; chatInput.style.height='auto';
   addTyping();
   const controller = new AbortController();
-  const timeoutId = setTimeout(()=>controller.abort(), 15000);
+  const timeoutId = setTimeout(()=>controller.abort(), 35000);
   try{
     const res = await fetch(AI_ENDPOINT, {
       method:'POST',
@@ -1083,7 +1202,7 @@ async function sendChat(){
     chatHistory.push({ role:'assistant', content: String(reply) });
   }catch(err){
     let msg = err.message;
-    if(err.name === 'AbortError') msg = "le serveur n'a pas répondu à temps (délai de 15 s dépassé).";
+    if(err.name === 'AbortError') msg = "le serveur n'a pas répondu à temps (délai de 35 s dépassé).";
     else if(msg === 'Failed to fetch') msg = "impossible d'atteindre le serveur (URL du Worker incorrecte, Worker arrêté, ou CORS non configuré côté Cloudflare — vérifie les en-têtes Access-Control-Allow-Origin).";
     addBubble("Erreur en contactant l'assistant : " + msg, 'ai');
     toast('Assistant IA injoignable — voir le message ci-dessus');
