@@ -146,20 +146,21 @@
     }
 
     .about-btn {
-      border: 1px solid var(--glass-brd);
-      background: rgba(255, 255, 255, .05);
+      border: none;
+      background: transparent;
       color: var(--ink-dim);
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 700;
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 999px;
       cursor: pointer;
+      margin-left: 2px;
       transition: color .2s ease, background .2s ease;
     }
 
     .about-btn:hover {
       color: #fff;
-      background: rgba(255, 255, 255, .1);
+      background: rgba(255, 255, 255, .08);
     }
 
     .about-overlay {
@@ -694,48 +695,133 @@
     }
 
     .style-menu select {
+      display: none;
+    }
+
+    /* ---- Dropdown perso (police / taille) ---- */
+    .dd {
+      position: relative;
+    }
+
+    .dd-btn {
       border: 1px solid var(--glass-brd);
       background: rgba(255, 255, 255, .08);
       color: #fff;
       border-radius: 10px;
-      padding: 8px 10px;
+      padding: 8px 12px;
       font-size: 13px;
       font-family: inherit;
       cursor: pointer;
-      -webkit-appearance: none;
-      appearance: none;
-      min-width: 98px;
-      background-image: linear-gradient(45deg, transparent 50%, var(--ink-dim) 50%), linear-gradient(135deg, var(--ink-dim) 50%, transparent 50%);
-      background-position: calc(100% - 14px) calc(50% - 2px), calc(100% - 9px) calc(50% - 2px);
-      background-size: 5px 5px, 5px 5px;
-      background-repeat: no-repeat;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 88px;
+      justify-content: space-between;
     }
 
-    .style-menu input[type=color] {
-      -webkit-appearance: none;
-      appearance: none;
+    .dd-btn:hover {
+      background: rgba(255, 255, 255, .14);
+    }
+
+    .dd-arrow {
+      font-size: 10px;
+      color: var(--ink-dim);
+      transition: transform .2s ease;
+    }
+
+    .dd.open .dd-arrow {
+      transform: rotate(180deg);
+    }
+
+    .dd-list {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      z-index: 60;
+      min-width: 140px;
+      max-height: 220px;
+      overflow-y: auto;
+      background: rgba(16, 18, 28, .95);
+      border: 1px solid var(--glass-brd);
+      border-radius: 12px;
+      padding: 6px;
+      display: none;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, .5);
+    }
+
+    .dd.open .dd-list {
+      display: block;
+    }
+
+    .dd-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .dd-item:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .dd-item.sel {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(58, 160, 255, .25), rgba(161, 90, 239, .25));
+    }
+
+    /* ---- Sélecteur de couleur perso ---- */
+    .cp {
+      position: relative;
+    }
+
+    .cp-btn {
       width: 34px;
       height: 34px;
       border-radius: 9px;
       border: 1px solid var(--glass-brd);
-      padding: 0;
-      background: rgba(255, 255, 255, .08);
       cursor: pointer;
-      flex: none;
+      padding: 0;
     }
 
-    .style-menu input[type=color]::-webkit-color-swatch-wrapper {
-      padding: 3px;
+    .cp-list {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      z-index: 60;
+      display: none;
+      grid-template-columns: repeat(6, 22px);
+      gap: 6px;
+      padding: 10px;
+      background: rgba(16, 18, 28, .95);
+      border: 1px solid var(--glass-brd);
+      border-radius: 12px;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, .5);
     }
 
-    .style-menu input[type=color]::-webkit-color-swatch {
-      border: none;
-      border-radius: 6px;
+    .cp.open .cp-list {
+      display: grid;
     }
 
-    .style-menu input[type=color]::-moz-color-swatch {
-      border: none;
-      border-radius: 6px;
+    .cp-swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, .15);
+      transition: transform .12s ease;
+    }
+
+    .cp-swatch:hover {
+      transform: scale(1.15);
+    }
+
+    .style-menu input[type=color] {
+      display: none;
     }
 
     .menu-sep {
@@ -1570,7 +1656,6 @@
   <div id="appShell">
     <div class="topbar">
       <div class="brand"><span class="dot"></span>Presse HGGSP</div>
-      <button class="about-btn" id="aboutBtn" type="button">À propos</button>
       <div class="clock" id="liveClock">--:--:--</div>
       <div class="status-pill"><span class="status-dot"></span><span id="statusText">Connecté</span></div>
     </div>
@@ -1610,22 +1695,35 @@
               <button class="pen-btn" id="penBtn" title="Personnaliser">🖊️</button>
             </div>
             <div class="style-menu" id="styleMenu">
-              <select id="fontFamily" title="Police">
-                <option value="Inter">Inter</option>
-                <option value="Manrope">Manrope</option>
-                <option value="Georgia">Georgia</option>
-                <option value="'Courier New'">Courier</option>
-                <option value="'Comic Sans MS'">Comic Sans</option>
-                <option value="'Times New Roman'">Times</option>
-              </select>
-              <select id="fontSize" title="Taille">
-                <option value="1">Petit</option>
-                <option value="3" selected>Normal</option>
-                <option value="5">Grand</option>
-                <option value="7">Très grand</option>
-              </select>
-              <input type="color" id="fontColor" title="Couleur du texte" value="#f2f3f7">
-              <input type="color" id="bgColor" title="Surlignage" value="#ffd60a">
+              <div class="dd" id="ddFontFamily">
+                <button type="button" class="dd-btn" id="ddFontFamilyBtn">Inter <span class="dd-arrow">▾</span></button>
+                <div class="dd-list">
+                  <div class="dd-item sel" data-value="Inter" style="font-family:Inter">Inter</div>
+                  <div class="dd-item" data-value="Manrope" style="font-family:Manrope">Manrope</div>
+                  <div class="dd-item" data-value="Georgia" style="font-family:Georgia">Georgia</div>
+                  <div class="dd-item" data-value="'Courier New'" style="font-family:'Courier New'">Courier</div>
+                  <div class="dd-item" data-value="'Comic Sans MS'" style="font-family:'Comic Sans MS'">Comic Sans</div>
+                  <div class="dd-item" data-value="'Times New Roman'" style="font-family:'Times New Roman'">Times
+                  </div>
+                </div>
+              </div>
+              <div class="dd" id="ddFontSize">
+                <button type="button" class="dd-btn" id="ddFontSizeBtn">Normal <span class="dd-arrow">▾</span></button>
+                <div class="dd-list">
+                  <div class="dd-item" data-value="1">Petit</div>
+                  <div class="dd-item sel" data-value="3">Normal</div>
+                  <div class="dd-item" data-value="5">Grand</div>
+                  <div class="dd-item" data-value="7">Très grand</div>
+                </div>
+              </div>
+              <div class="cp" id="cpFontColor" title="Couleur du texte">
+                <button type="button" class="cp-btn" style="background:#f2f3f7"></button>
+                <div class="cp-list" id="cpFontColorList"></div>
+              </div>
+              <div class="cp" id="cpBgColor" title="Surlignage">
+                <button type="button" class="cp-btn" style="background:#ffd60a"></button>
+                <div class="cp-list" id="cpBgColorList"></div>
+              </div>
               <button class="fmt-btn" data-cmd="bold" title="Gras"><b>G</b></button>
               <button class="fmt-btn" data-cmd="italic" title="Italique"><i>I</i></button>
               <button class="fmt-btn" data-cmd="underline" title="Souligné"><u>S</u></button>
@@ -1713,6 +1811,7 @@
       <button class="active" data-tab="projet">Projet</button>
       <button data-tab="communication">Communication</button>
       <button data-tab="assistant">Assistant</button>
+      <button class="about-btn" id="aboutBtn" type="button">À propos</button>
     </div>
   </div><!-- /#appShell -->
 
@@ -1825,7 +1924,7 @@
 
     /* ================= TABS ================= */
     const tabbarEl = document.getElementById('tabbar');
-    const tabBtns = Array.from(document.querySelectorAll('.tabbar button'));
+    const tabBtns = Array.from(document.querySelectorAll('.tabbar button[data-tab]'));
     const pill = document.getElementById('tabPill');
     function movePill(btn) {
       pill.style.width = btn.offsetWidth + 'px';
@@ -1887,7 +1986,11 @@
         const target = btnAt(clientX);
         activateTab(target);
       }
-      tabbarEl.addEventListener('pointerdown', e => { tabbarEl.setPointerCapture(e.pointerId); start(e.clientX); });
+      tabbarEl.addEventListener('pointerdown', e => {
+        if (e.target.closest('button:not([data-tab])')) return; // laisse "À propos" tranquille
+        tabbarEl.setPointerCapture(e.pointerId);
+        start(e.clientX);
+      });
       tabbarEl.addEventListener('pointermove', e => move(e.clientX));
       tabbarEl.addEventListener('pointerup', e => end(e.clientX));
       tabbarEl.addEventListener('pointercancel', e => end(e.clientX));
@@ -2142,36 +2245,76 @@
         saveSelection();
       };
     });
-    document.getElementById('fontFamily').onchange = (e) => {
-      restoreSelection();
+    /* ---- Dropdown perso : police / taille ---- */
+    function setupDropdown(ddId, btnId, applyFn) {
+      const dd = document.getElementById(ddId);
+      const btn = document.getElementById(btnId);
+      dd.querySelectorAll('.dd-item').forEach(item => {
+        item.addEventListener('click', () => {
+          restoreSelection();
+          dd.querySelectorAll('.dd-item').forEach(i => i.classList.remove('sel'));
+          item.classList.add('sel');
+          btn.firstChild.textContent = item.textContent.trim() + ' ';
+          applyFn(item.dataset.value);
+          document.getElementById('noteBody').dispatchEvent(new Event('input'));
+          saveSelection();
+          dd.classList.remove('open');
+        });
+      });
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.dd.open, .cp.open').forEach(o => { if (o !== dd) o.classList.remove('open'); });
+        dd.classList.toggle('open');
+      });
+    }
+    setupDropdown('ddFontFamily', 'ddFontFamilyBtn', (val) => {
       try { document.execCommand('styleWithCSS', false, true); } catch (e) { }
-      document.execCommand('fontName', false, e.target.value);
-      document.getElementById('noteBody').dispatchEvent(new Event('input'));
-      saveSelection();
-    };
-    document.getElementById('fontSize').onchange = (e) => {
-      restoreSelection();
+      document.execCommand('fontName', false, val);
+    });
+    setupDropdown('ddFontSize', 'ddFontSizeBtn', (val) => {
       try { document.execCommand('styleWithCSS', false, true); } catch (e) { }
-      document.execCommand('fontSize', false, e.target.value);
-      document.getElementById('noteBody').dispatchEvent(new Event('input'));
-      saveSelection();
-    };
-    document.getElementById('fontColor').oninput = (e) => {
-      restoreSelection();
+      document.execCommand('fontSize', false, val);
+    });
+
+    /* ---- Sélecteur de couleur perso : texte / surlignage ---- */
+    const PALETTE = ['#ffffff', '#eef0f5', '#8b90a3', '#0d0f16', '#3aa0ff', '#a15aef', '#ff5c82', '#37d67a', '#ffab3d', '#ffd93d', '#ff375f', '#0a84ff', '#bf5af2', '#30d158', '#64d2ff', '#ff6482', '#f2f3f7', '#000000'];
+    function setupColorPicker(cpId, listId, applyFn) {
+      const cp = document.getElementById(cpId);
+      const btn = cp.querySelector('.cp-btn');
+      const list = document.getElementById(listId);
+      PALETTE.forEach(c => {
+        const sw = document.createElement('div');
+        sw.className = 'cp-swatch';
+        sw.style.background = c;
+        sw.addEventListener('click', () => {
+          restoreSelection();
+          btn.style.background = c;
+          applyFn(c);
+          document.getElementById('noteBody').dispatchEvent(new Event('input'));
+          saveSelection();
+          cp.classList.remove('open');
+        });
+        list.appendChild(sw);
+      });
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.dd.open, .cp.open').forEach(o => { if (o !== cp) o.classList.remove('open'); });
+        cp.classList.toggle('open');
+      });
+    }
+    setupColorPicker('cpFontColor', 'cpFontColorList', (val) => {
       try { document.execCommand('styleWithCSS', false, true); } catch (e) { }
-      document.execCommand('foreColor', false, e.target.value);
-      document.getElementById('noteBody').dispatchEvent(new Event('input'));
-      saveSelection();
-    };
-    document.getElementById('bgColor').oninput = (e) => {
-      restoreSelection();
+      document.execCommand('foreColor', false, val);
+    });
+    setupColorPicker('cpBgColor', 'cpBgColorList', (val) => {
       try { document.execCommand('styleWithCSS', false, true); } catch (e) { }
       let ok = false;
-      try { ok = document.execCommand('hiliteColor', false, e.target.value); } catch (_) { ok = false; }
-      if (!ok) { try { document.execCommand('backColor', false, e.target.value); } catch (_) { } }
-      document.getElementById('noteBody').dispatchEvent(new Event('input'));
-      saveSelection();
-    };
+      try { ok = document.execCommand('hiliteColor', false, val); } catch (_) { ok = false; }
+      if (!ok) { try { document.execCommand('backColor', false, val); } catch (_) { } }
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.dd.open, .cp.open').forEach(o => o.classList.remove('open'));
+    });
 
     document.getElementById('fileInput').addEventListener('change', async (e) => {
       await ensureCurrentNote();
