@@ -1719,16 +1719,10 @@
   <script>
     /* ================= DIGICODE ================= */
     /* Le code d'accès est vérifié à distance sur le Worker Cloudflare :
-       on envoie seulement le hash SHA-256 du code saisi, jamais le code en clair. */
+       le code est envoyé tel quel, c'est le Worker qui le hash et compare. */
     const LOCK_ENDPOINT = 'https://presse.adf-aeroport-vlt.workers.dev/';
     let lockInput = '';
     let lockChecking = false;
-
-    async function hashCode(code) {
-      const data = new TextEncoder().encode(code);
-      const digest = await crypto.subtle.digest('SHA-256', data);
-      return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
 
     function updateLockDots() {
       document.querySelectorAll('#lockDots span').forEach((dot, i) => {
@@ -1742,11 +1736,10 @@
       err.classList.remove('show');
       lockChecking = true;
       try {
-        const hash = await hashCode(lockInput);
         const res = await fetch(LOCK_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ENTER_CODE: hash })
+          body: JSON.stringify({ ENTER_CODE: lockInput })
         });
         let data = {};
         try { data = await res.json(); } catch (_) { /* réponse non-JSON */ }
@@ -1755,9 +1748,10 @@
           document.getElementById('lockScreen').classList.add('unlocked');
           sessionStorage.setItem('presse_hggsp_unlocked', '1');
         } else {
-          throw new Error('code refusé');
+          throw new Error(data && data.error ? data.error : 'code refusé');
         }
       } catch (e) {
+        console.error('[Digicode] vérification échouée :', e);
         dots.classList.add('shake');
         err.textContent = 'Code incorrect';
         err.classList.add('show');
