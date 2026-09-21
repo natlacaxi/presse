@@ -16,6 +16,10 @@
   <meta name="theme-color" content="#0d0f16">
   <link rel="icon" type="image/svg+xml"
     href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMGQwZjE2Ii8+PHRleHQgeD0iNTAiIHk9IjY4IiBmb250LXNpemU9IjU4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5OcPC90ZXh0Pjwvc3ZnPg==">
+  <link rel="apple-touch-icon"
+    href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMGQwZjE2Ii8+PHRleHQgeD0iNTAiIHk9IjY4IiBmb250LXNpemU9IjU4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5OcPC90ZXh0Pjwvc3ZnPg==">
+  <link rel="manifest"
+    href="data:application/manifest+json;base64,eyJuYW1lIjogIlByZXNzZSBIR0dTUCIsICJzaG9ydF9uYW1lIjogIlByZXNzZSBIR0dTUCIsICJkZXNjcmlwdGlvbiI6ICJMZSBtw6lkaWEgcGFydGljaXBhdGlmIGRlcyDDqWzDqHZlcyBkdSBMeWPDqWUgQWxiZXJ0IENhbG1ldHRlIOKAlCBwcm9qZXQgRMOpbW9jcmF0aWUgMjAyNi0yMDI3LiIsICJzdGFydF91cmwiOiAiLi9wcmVzc2UuaHRtbCIsICJzY29wZSI6ICIuLyIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLCAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGQwZjE2IiwgInRoZW1lX2NvbG9yIjogIiMwZDBmMTYiLCAiaWNvbnMiOiBbeyJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhacFpYZENiM2c5SWpBZ01DQXhNREFnTVRBd0lqNDhjbVZqZENCM2FXUjBhRDBpTVRBd0lpQm9aV2xuYUhROUlqRXdNQ0lnY25nOUlqSXlJaUJtYVd4c1BTSWpNR1F3WmpFMklpOCtQSFJsZUhRZ2VEMGlOVEFpSUhrOUlqWTRJaUJtYjI1MExYTnBlbVU5SWpVNElpQjBaWGgwTFdGdVkyaHZjajBpYldsa1pHeGxJajd3bjVPY1BDOTBaWGgwUGp3dmMzWm5QZz09IiwgInNpemVzIjogIjE5MngxOTIiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55In0sIHsic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4TURBZ01UQXdJajQ4Y21WamRDQjNhV1IwYUQwaU1UQXdJaUJvWldsbmFIUTlJakV3TUNJZ2NuZzlJakl5SWlCbWFXeHNQU0lqTUdRd1pqRTJJaTgrUEhSbGVIUWdlRDBpTlRBaUlIazlJalk0SWlCbWIyNTBMWE5wZW1VOUlqVTRJaUIwWlhoMExXRnVZMmh2Y2owaWJXbGtaR3hsSWo3d241T2NQQzkwWlhoMFBqd3ZjM1puUGc9PSIsICJzaXplcyI6ICI1MTJ4NTEyIiwgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsICJwdXJwb3NlIjogImFueSJ9XX0=">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -208,6 +212,45 @@
 
     .about-card p:last-child {
       margin-bottom: 0;
+    }
+
+    .install-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 18px;
+      padding: 13px 18px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--blue), var(--purple) 130%);
+      color: #fff;
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 26px rgba(58, 160, 255, .3);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    .install-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 32px rgba(58, 160, 255, .4);
+    }
+
+    .install-btn:active {
+      transform: translateY(0);
+    }
+
+    .install-icon {
+      font-size: 15px;
+    }
+
+    .install-hint {
+      margin-top: 12px;
+      font-size: 12.5px;
+      color: var(--ink-dim);
+      text-align: center;
     }
 
     .about-close {
@@ -1673,6 +1716,10 @@
           leur esprit critique à travers l'écriture et l'actualité.</p>
         <p>À travers cette plateforme, les élèves apprennent à enquêter, rédiger et publier, tout en
           échangeant entre eux sur l'organisation de leurs articles et de leurs projets de classe.</p>
+        <button class="install-btn" id="installAppBtn" type="button" hidden>
+          <span class="install-icon">⬇</span> Installer l'application
+        </button>
+        <p class="install-hint" id="installHint" hidden></p>
       </div>
     </div>
 
@@ -2001,6 +2048,62 @@
     document.getElementById('aboutBtn').addEventListener('click', () => aboutOverlay.classList.add('show'));
     document.getElementById('aboutClose').addEventListener('click', () => aboutOverlay.classList.remove('show'));
     aboutOverlay.addEventListener('click', e => { if (e.target === aboutOverlay) aboutOverlay.classList.remove('show'); });
+
+    /* ================= INSTALLATION PWA (vraie installation, pas un raccourci) ================= */
+    const installBtn = document.getElementById('installAppBtn');
+    const installHint = document.getElementById('installHint');
+    let deferredInstallPrompt = null;
+
+    // Service worker requis par Chrome/Edge/Android pour proposer une vraie installation
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => { });
+    }
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      installBtn.hidden = false;
+      installHint.hidden = true;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      installBtn.hidden = true;
+      installHint.hidden = false;
+      installHint.textContent = 'Application installée ✅';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) return;
+      installBtn.disabled = true;
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      installBtn.disabled = false;
+      if (outcome === 'accepted') {
+        installBtn.hidden = true;
+      }
+    });
+
+    // Si le navigateur ne propose jamais l'installation native (iOS Safari, navigateur déjà installé…),
+    // on montre une aide au lieu du bouton, plutôt qu'un bouton qui ne ferait rien.
+    setTimeout(() => {
+      if (isStandalone) {
+        installBtn.hidden = true;
+        installHint.hidden = false;
+        installHint.textContent = 'Application déjà installée ✅';
+      } else if (!deferredInstallPrompt) {
+        installBtn.hidden = true;
+        installHint.hidden = false;
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        installHint.textContent = isIOS
+          ? "Sur iPhone/iPad : appuie sur Partager (⬆️) puis \"Sur l'écran d'accueil\"."
+          : "L'installation n'est pas proposée par ce navigateur pour le moment.";
+      }
+    }, 2500);
 
     /* ================================================================
        PROJET — BLOC-NOTES
